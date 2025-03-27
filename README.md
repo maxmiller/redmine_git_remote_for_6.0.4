@@ -9,7 +9,7 @@ Install the plugin as usual:
 
 ```
 cd REDMINE_ROOT/plugins
-git clone https://github.com/dergachev/redmine_git_remote
+git clone[ https://github.com/dergachev/redmine_git_remote](https://github.com/maxmiller/redmine_git_remote_for_6.0.4.git)
 ```
 
 Then enable the new GitRemote SCM type in [http://redmine-root/settings?tab=repositories](http://redmine-root/settings?tab=repositories)
