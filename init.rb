@@ -4,12 +4,17 @@ plugin_root = File.expand_path(__dir__)
 lib_path = File.join(plugin_root, 'lib')
 
 if defined?(Rails.autoloaders) && Rails.autoloaders.respond_to?(:main)
-  Rails.autoloaders.main.push_dir(lib_path)
+  autoloader = Rails.autoloaders.main
+  autoloader.push_dir(lib_path) unless autoloader.dirs.include?(lib_path)
 else
-  ActiveSupport::Dependencies.autoload_paths << lib_path
+  deps = ActiveSupport::Dependencies.autoload_paths
+  deps << lib_path unless deps.include?(lib_path)
 end
 
-Rails.application.config.eager_load_paths << lib_path unless Rails.application.config.eager_load_paths.include?(lib_path)
+config = Rails.application.config
+if config.respond_to?(:eager_load_paths) && !config.eager_load_paths.include?(lib_path)
+  config.eager_load_paths += [lib_path]
+end
 
 require_relative 'lib/redmine_git_remote'
 
