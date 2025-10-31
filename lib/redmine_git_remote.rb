@@ -4,7 +4,7 @@ module RedmineGitRemote
 end
 
 ActiveSupport::Reloader.to_prepare do
-  next unless defined?(RepositoriesHelper)
+  require_dependency 'repositories_helper'
 
   patch = RedmineGitRemote::RepositoriesHelperPatch
 
