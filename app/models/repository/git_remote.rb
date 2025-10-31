@@ -123,7 +123,7 @@ class Repository::GitRemote < Repository::Git
     end
   end
 
-  unloadable
+  unloadable if respond_to?(:unloadable, true)
   def self.scm_name
     'GitRemote'
   end
