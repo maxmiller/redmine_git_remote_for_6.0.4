@@ -18,10 +18,4 @@ module RedmineGitRemote
       end
     end
   end
-
-  ActiveSupport::Reloader.to_prepare do
-    unless RepositoriesHelper.included_modules.include?(RepositoriesHelperPatch)
-      RepositoriesHelper.send(:include, RepositoriesHelperPatch)
-    end
-  end
 end
