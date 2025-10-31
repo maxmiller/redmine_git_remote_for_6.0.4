@@ -1,5 +1,17 @@
 require 'redmine'
-require_dependency "redmine_git_remote/repositories_helper_patch"
+
+plugin_root = File.expand_path(__dir__)
+lib_path = File.join(plugin_root, 'lib')
+
+if defined?(Rails.autoloaders) && Rails.autoloaders.respond_to?(:main)
+  Rails.autoloaders.main.push_dir(lib_path)
+else
+  ActiveSupport::Dependencies.autoload_paths << lib_path
+end
+
+Rails.application.config.eager_load_paths << lib_path unless Rails.application.config.eager_load_paths.include?(lib_path)
+
+require_relative 'lib/redmine_git_remote'
 
 Redmine::Scm::Base.add "GitRemote"
 
