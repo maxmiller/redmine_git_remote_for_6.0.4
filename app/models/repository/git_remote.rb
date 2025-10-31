@@ -8,7 +8,9 @@ class Repository::GitRemote < Repository::Git
 
   before_validation :initialize_clone
 
-  safe_attributes 'extra_info', :if => lambda {|repository, _user| repository.new_record?}
+  safe_attributes 'extra_info',
+                  'extra_info[extra_clone_url]',
+                  :if => lambda {|repository, _user| repository.new_record?}
 
   # TODO: figure out how to do this safely (if at all)
   # before_deletion :rm_removed_repo
@@ -74,9 +76,13 @@ class Repository::GitRemote < Repository::Git
   # called in before_validate handler, sets form errors
   def initialize_clone
     # avoids crash in RepositoriesController#destroy
-    return unless attributes["extra_info"]["extra_clone_url"]
+    extra_info_attributes = attributes["extra_info"]
+    return unless extra_info_attributes.respond_to?(:[])
 
-    p = parse(attributes["extra_info"]["extra_clone_url"])
+    raw_clone_url = extra_info_attributes["extra_clone_url"].to_s.strip
+    return if raw_clone_url.blank?
+
+    p = parse(raw_clone_url)
     self.identifier = p[:identifier] if identifier.empty?
 
     base_path = Setting.plugin_redmine_git_remote['git_remote_repo_clone_path']
